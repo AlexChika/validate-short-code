@@ -1,5 +1,3 @@
-# TEST UI
-
 ### Guides
 
 - `npm i`: To install all dependencies
