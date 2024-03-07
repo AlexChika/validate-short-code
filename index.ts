@@ -44,21 +44,23 @@ function validateShortCode(code: string) {
 
     if (codes[char]) {
       // if checks that => char is an openeing character;
-
+      /**
+       *
+       */
       if (state === "close") return false;
-
       queue.push(char);
       state = "open";
     } else {
       // else garantees that => char is a closing character
-
+      /**
+       *
+       */
       if (!state) return false; // yet to add atleast one openning tag
 
       const lastItemInQue = queue[queue.length - 1];
       if (codes[lastItemInQue] !== char) return false;
       queue.pop();
       isvalid = true;
-
       state = "close"; // stop accepting openening chars
     }
   }
