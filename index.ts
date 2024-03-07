@@ -17,35 +17,99 @@ function validateShortCode(code: string) {
   // 1 check string... validation
   if (typeof code !== "string") throw new Error("Expected a code string");
 
-  // 2 Remove normal text char to reduce length and convert to string array
-  const codeStr = code.replace(/[a-bA-Z0-9\s]/gi, "").split("");
-  // console.log({ codeStr });
+  // 2 Remove alphanumeric text char to reduce length and convert to string array
+  const codeArr = code.replace(/[a-bA-Z0-9\s]/gi, "").split("");
+  // console.log({ codeArr });
 
-  // 3 create an object
+  // 3 create an object of opening and closing tag as key/value pairs
   const codes = {
     "[": "]",
     "{": "}",
     "(": ")",
   };
 
-  // 2 convert strings to an array loop
-  // filter string and return code characters : Optional
+  // 4 create a que
+  const queue: string[] = [];
 
-  const char = ["{", "(", "[", "]", ")", "}"];
+  // 5 declare helper states that defines our control flow
+  // when state is "open", opening chars are valid ... closing are not
+  let state: "open" | "close" | undefined = undefined;
+  let isvalid = false;
 
-  // for (const c of codeArr) { //
-  //   if (char.includes(c)) { // identify the code chars
+  // 6 Loop over codeArr
+  for (let i = 0; i < codeArr.length; i++) {
+    const char = codeArr[i];
 
-  //       if()
-  //   }
-  // }
+    if (!char) continue; //extra check for white spaces
+
+    if (codes[char]) {
+      // if checks that => char is an openeing character;
+
+      if (state === "close") return false;
+
+      queue.push(char);
+      state = "open";
+    } else {
+      // else garantees that => char is a closing character
+
+      if (!state) return false; // yet to add atleast one openning tag
+
+      if (codes[queue[queue.length - 1]] !== char) return false;
+      queue.pop();
+      isvalid = true;
+
+      state = "close"; // stop accepting openening chars
+    }
+  }
+
+  return isvalid;
 }
 
 /* --------------------- TESTS --------------------- */
-// please uncomment one after ther other
-validateShortCode("{table {(text) color}}");
+const test1 = validateShortCode("{table {(text) color}}");
+console.log({ test1 }); // {test1: true}
 
-/* -------- Implementation flow and details -------- */
-// 1 . we validate that code snippet is a string;
+/**
+ *
+ *
+ */
+const test2 = validateShortCode("[({}})])");
+console.log({ test2 }); // {test2: false}
+/**
+ *
+ *
+ */
 
-// 2
+const test3 = validateShortCode("[[[{[{{{[({[(((({()}))))]})]}}}]}]]]");
+console.log({ test3 }); // {test3: true}
+/**
+ *
+ *
+ *
+ *
+ *
+ */
+
+const test4 = validateShortCode("[[[{[{{{([({[(((({()}))))]})]}}}]}]]]");
+console.log({ test4 }); // {test4: false}
+
+/**
+ *
+ *
+ */
+
+const test5 = validateShortCode(
+  "{table and chair set for dinner  {(func (param)) color}}"
+);
+console.log({ test5 }); // {test5: true}
+
+// Info
+/**
+ * Edge cases are not handled. the filtering does not remove special characters
+ * only alphanumeric characters and white spaces are filtere
+ */
+
+//  Improvement suggestion
+/**
+ * A regex that filters out all characters excluding the code chars would improve the functions accuracy.
+ */

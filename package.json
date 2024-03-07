@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc --watch --noEmit index.ts & tsx watch  index.ts"
+    "start": "tsc --watch --noEmit index.ts & tsx watch index.ts"
   },
   "keywords": [],
   "author": "",
