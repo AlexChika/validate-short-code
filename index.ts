@@ -54,7 +54,8 @@ function validateShortCode(code: string) {
 
       if (!state) return false; // yet to add atleast one openning tag
 
-      if (codes[queue[queue.length - 1]] !== char) return false;
+      const lastItemInQue = queue[queue.length - 1];
+      if (codes[lastItemInQue] !== char) return false;
       queue.pop();
       isvalid = true;
 
@@ -106,10 +107,11 @@ console.log({ test5 }); // {test5: true}
 // Info
 /**
  * Edge cases are not handled. the filtering does not remove special characters
- * only alphanumeric characters and white spaces are filtere
+ * only alphanumeric characters and white spaces are filtered as a result this
+ *  [{;()}] would return false;
  */
 
 //  Improvement suggestion
 /**
- * A regex that filters out all characters excluding the code chars would improve the functions accuracy.
+ * A regex that filters out all characters excluding the code chars would improve the function's accuracy.
  */
